@@ -74,9 +74,9 @@ $(output_dir)/$(lib_dir)/%.o: $(lib_dir)/%.cpp
 # Test targets
 -include $(test_deps)
 
-$(test_output): $(test_objs)
+$(test_output): $(test_objs) $(lib_aoutput)
 	@$(mkdir) $(dir $@)
-	$(compiler) $(test_ldflags) -o$@ $(test_objs) $(test_libs)
+	$(compiler) $(test_ldflags) -o$@ $(test_objs) $(lib_aoutput) $(test_libs)
 
 $(output_dir)/$(test_dir)/%.o: $(test_dir)/%.cpp
 	@$(mkdir) $(dir $@)
