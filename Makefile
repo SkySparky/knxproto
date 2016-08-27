@@ -19,14 +19,14 @@ test_dir   = tests
 lib_name    = knxproto
 lib_sover   = 0
 lib_files   =
-lib_headers =
+lib_headers = knxproto/utils/natseq.hpp
 lib_flags   = $(base_flags) -fPIC
 lib_libs    = $(base_libs)
 lib_ldflags = $(base_ldflags) -shared -Wl,-soname,lib$(lib_name).so
 
 # Tests
 test_exename = test
-test_files   = all.cpp
+test_files   = all.cpp utils/natseq.cpp
 test_flags   = $(base_flags) -O0 -g -DDEBUG -Ilib -Ideps/catch/include
 test_libs    = $(base_libs)
 test_ldflags = $(base_ldflags)
