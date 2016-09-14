@@ -39,11 +39,11 @@ size_t BufferElement<Type>::Size;
 template <typename Type>
 struct BufferElement<const Type> {
 	static constexpr
-	size_t Size = sizeof(Type);
+	size_t Size = BufferElement<Type>::Size;
 
 	static inline
 	bool put(uint8_t* buffer, const Type& input) {
-		return memcpy(buffer, &input, Size) == buffer;
+		return BufferElement<Type>::put(buffer, input);
 	}
 };
 
