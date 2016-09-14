@@ -111,7 +111,7 @@ bool put(uint8_t* buffer, size_t length, const Types&... elems) {
 }
 
 template <typename... Types> inline
-bool get(const uint8_t* buffer, size_t length, Types&... elems) {
+bool get(const uint8_t* buffer, size_t length, Types&&... elems) {
 	if (length < SumSeq<BufferElement<Types>::Size...>::Result)
 		return false;
 
@@ -120,7 +120,7 @@ bool get(const uint8_t* buffer, size_t length, Types&... elems) {
 			internal::BufferInteraction
 		>;
 
-	return BufferInteraction::get(buffer, elems...);
+	return BufferInteraction::get(buffer, static_cast<Types&>(elems)...);
 }
 
 using Buffer = std::vector<uint8_t>;
@@ -131,8 +131,8 @@ bool put(Buffer& buffer, const Types&... elems) {
 }
 
 template <typename... Types> inline
-bool get(const Buffer& buffer, Types&... elems) {
-	return get(buffer.data(), buffer.size(), elems...);
+bool get(const Buffer& buffer, Types&&... elems) {
+	return get(buffer.data(), buffer.size(), std::forward<Types>(elems)...);
 }
 
 KNXPROTO_NS_END

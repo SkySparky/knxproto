@@ -19,3 +19,16 @@ TEST_CASE("put/get") {
 	REQUIRE(c1 == c2);
 	REQUIRE(d1 == d2);
 }
+
+struct Test {
+	uint16_t value;
+};
+
+TEST_CASE("_") {
+	Buffer buf(sizeof(Test) * 2);
+
+	Test x;
+	REQUIRE(get(buf, x));
+
+	REQUIRE(get(buf, Test {}));
+}
