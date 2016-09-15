@@ -6,7 +6,7 @@ ar    = ar rcs
 # Compiler
 CXX         ?= clang++
 compiler     = $(CXX)
-base_flags   = $(CXXFLAGS) -std=c++11 -fmessage-length=0 -Wall -Wextra -pedantic -D_GLIBCXX_USE_C99
+base_flags   = $(CXXFLAGS) -std=c++14 -fmessage-length=0 -Wall -Wextra -pedantic -D_GLIBCXX_USE_C99
 base_libs    =
 base_ldflags =
 
