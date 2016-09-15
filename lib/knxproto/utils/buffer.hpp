@@ -9,11 +9,14 @@
 #include "../common.hpp"
 #include "natseq.hpp"
 
+#include <arpa/inet.h>
+
 #include <cstddef>
 #include <cstdint>
 #include <cstring>
 #include <memory>
 #include <vector>
+#include <algorithm>
 
 KNXPROTO_NS_BEGIN
 
@@ -133,6 +136,48 @@ bool put(Buffer& buffer, const Types&... elems) {
 template <typename... Types> inline
 bool get(const Buffer& buffer, Types&&... elems) {
 	return get(buffer.data(), buffer.size(), std::forward<Types>(elems)...);
+}
+
+template <typename Type>
+struct NetOrdered {
+	Type& value;
+};
+
+template <typename Type>
+struct BufferElement<NetOrdered<Type>> {
+	static constexpr
+	size_t Size = BufferElement<Type>::Size;
+
+	static inline
+	bool get(const uint8_t* buffer, NetOrdered<Type>& output) {
+		if (htons(0x1337) != 0x1337) {
+			uint8_t copy_buffer[Size];
+			std::reverse_copy(buffer, buffer + Size, copy_buffer);
+
+			return BufferElement<Type>::get(copy_buffer, output.value);
+		} else {
+			return BufferElement<Type>::get(buffer, output.value);
+		}
+	}
+
+	static inline
+	bool put(uint8_t* buffer, const NetOrdered<Type>& input) {
+		if (!BufferElement<Type>::put(buffer, input.value))
+			return false;
+
+		if (htons(0x1337) != 0x1337)
+			std::reverse(buffer, buffer + Size);
+
+		return true;
+	}
+};
+
+template <typename Type> constexpr
+size_t BufferElement<NetOrdered<Type>>::Size;
+
+template <typename Type>
+NetOrdered<Type> NetOrder(Type&& value) {
+	return {static_cast<Type&>(value)};
 }
 
 KNXPROTO_NS_END

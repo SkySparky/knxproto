@@ -20,15 +20,17 @@ TEST_CASE("put/get") {
 	REQUIRE(d1 == d2);
 }
 
-struct Test {
-	uint16_t value;
-};
+TEST_CASE("NetOrder") {
+	Buffer buf(sizeof(uint16_t));
 
-TEST_CASE("_") {
-	Buffer buf(sizeof(Test) * 2);
+	uint16_t x = 0x1337;
+	REQUIRE(put(buf, NetOrder(x)));
 
-	Test x;
-	REQUIRE(get(buf, x));
 
-	REQUIRE(get(buf, Test {}));
+	uint16_t y;
+	REQUIRE(get(buf, y));
+	REQUIRE(y == htons(x));
+
+	REQUIRE(get(buf, NetOrder(y)));
+	REQUIRE(x == y);
 }
