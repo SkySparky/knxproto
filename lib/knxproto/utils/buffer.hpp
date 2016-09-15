@@ -180,6 +180,31 @@ NetOrdered<Type> NetOrder(Type&& value) {
 	return {static_cast<Type&>(value)};
 }
 
+template <size_t N>
+struct Space {};
+
+template <size_t N>
+struct BufferElement<Space<N>> {
+	static constexpr
+	size_t Size = N;
+
+	static inline
+	bool get(const uint8_t*, Space<N>&) {
+		return true;
+	}
+
+	static inline
+	bool put(uint8_t*, const Space<N>&) {
+		return true;
+	}
+};
+
+template <size_t N> constexpr
+size_t BufferElement<Space<N>>::Size;
+
+template <size_t N>
+Space<N> space {};
+
 KNXPROTO_NS_END
 
 #endif
