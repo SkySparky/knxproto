@@ -40,18 +40,13 @@ template <typename Type> constexpr
 size_t BufferElement<Type>::Size;
 
 template <typename Type>
-struct BufferElement<const Type> {
-	static constexpr
-	size_t Size = BufferElement<Type>::Size;
+struct BufferElement<const Type>: BufferElement<Type> {};
 
-	static inline
-	bool put(uint8_t* buffer, const Type& input) {
-		return BufferElement<Type>::put(buffer, input);
-	}
-};
+template <typename Type>
+struct BufferElement<volatile Type>: BufferElement<Type> {};
 
-template <typename Type> constexpr
-size_t BufferElement<const Type>::Size;
+template <typename Type>
+struct BufferElement<const volatile Type>: BufferElement<Type> {};
 
 template <typename Type>
 struct BufferElement<Type&>: BufferElement<Type> {};
@@ -189,7 +184,7 @@ struct BufferElement<Space<N>> {
 	size_t Size = N;
 
 	static inline
-	bool get(const uint8_t*, Space<N>&) {
+	bool get(const uint8_t*, const Space<N>&) {
 		return true;
 	}
 
@@ -202,7 +197,7 @@ struct BufferElement<Space<N>> {
 template <size_t N> constexpr
 size_t BufferElement<Space<N>>::Size;
 
-template <size_t N>
+template <size_t N> constexpr
 Space<N> space {};
 
 KNXPROTO_NS_END
