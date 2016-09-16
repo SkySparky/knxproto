@@ -171,7 +171,7 @@ template <typename Type> constexpr
 size_t BufferElement<NetOrdered<Type>>::Size;
 
 template <typename Type>
-NetOrdered<Type> NetOrder(Type&& value) {
+NetOrdered<Type> netOrdered(Type&& value) {
 	return {static_cast<Type&>(value)};
 }
 

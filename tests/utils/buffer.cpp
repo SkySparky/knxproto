@@ -20,21 +20,21 @@ TEST_CASE("put/get") {
 	REQUIRE(d1 == d2);
 }
 
-TEST_CASE("NetOrder") {
+TEST_CASE("netOrdered") {
 	Buffer buf(sizeof(uint16_t));
 
 	uint16_t x = 0x1337;
-	REQUIRE(put(buf, NetOrder(x)));
+	REQUIRE(put(buf, netOrdered(x)));
 
 	uint16_t y;
 	REQUIRE(get(buf, y));
 	REQUIRE(y == htons(x));
 
-	REQUIRE(get(buf, NetOrder(y)));
+	REQUIRE(get(buf, netOrdered(y)));
 	REQUIRE(x == y);
 }
 
-TEST_CASE("Space") {
+TEST_CASE("space") {
 	Buffer buf(sizeof(uint16_t) * 2);
 
 	uint16_t x = 0x1337;
