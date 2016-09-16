@@ -12,11 +12,20 @@
 
 KNXPROTO_NS_BEGIN
 
+/**
+ * Sequence of natural numbers.
+ */
 template <size_t... Seq>
 struct NatSeq {
+	/**
+	 * Offset the integers in this sequence by a certain value.
+	 */
 	template <size_t Offset>
 	using OffsetBy = NatSeq<Offset + Seq...>;
 
+	/**
+	 * Relay the sequence of integers to another template.
+	 */
 	template <template <size_t...> class Receiver>
 	using Relay = Receiver<Seq...>;
 };
@@ -36,6 +45,9 @@ namespace internal {
 	{};
 }
 
+/**
+ * Generate a sequence of partial sums.
+ */
 template <size_t... Seq>
 using MakeOffsetSeq = typename internal::MakeOffsetSeq<0, NatSeq<>, Seq...>::Result;
 
@@ -57,6 +69,9 @@ namespace internal {
 		SumSeq<Carry + Head, Tail...> {};
 }
 
+/**
+ * Summerize the sequence of integers.
+ */
 template <size_t... Seq>
 using SumSeq = internal::SumSeq<0, Seq...>;
 
