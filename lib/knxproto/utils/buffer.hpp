@@ -251,7 +251,7 @@ size_t BufferElement<NetOrdered<Type>>::Size;
 /**
  * Conveniently construct `NetOrdered<Type>`.
  */
-template <typename Type>
+template <typename Type> inline
 NetOrdered<Type> netOrdered(Type&& value) {
 	return {static_cast<Type&>(value)};
 }
