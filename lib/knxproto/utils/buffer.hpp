@@ -291,6 +291,49 @@ size_t BufferElement<Space<N>>::Size;
 template <size_t N> constexpr
 Space<N> space {};
 
+/**
+ *
+ */
+template <typename Container, typename Type>
+struct Transform {
+	Type& value;
+};
+
+template <typename Container, typename Type> inline
+Transform<Container, Type> transform(Type&& value) {
+	return {static_cast<Type&>(value)};
+}
+
+/**
+ *
+ */
+template <typename Container, typename Type>
+struct BufferElement<Transform<Container, Type>> {
+	static constexpr
+	size_t Size = BufferElement<Container>::Size;
+
+	static inline
+	bool get(const uint8_t* buffer, Transform<Container, Type>& wrapper) {
+		Container containedValue;
+		if (!BufferElement<Container>::get(buffer, containedValue))
+			return false;
+
+		wrapper.value = static_cast<Type>(containedValue);
+
+		return true;
+	}
+
+	static inline
+	bool put(uint8_t* buffer, const Transform<Container, Type>& wrapper) {
+		Container containedValue = static_cast<Container>(wrapper.value);
+		return BufferElement<Container>::put(buffer, containedValue);
+	}
+};
+
+// Make sure this gets exported
+template <typename Container, typename Type> constexpr
+size_t BufferElement<Transform<Container, Type>>::Size;
+
 KNXPROTO_NS_END
 
 #endif

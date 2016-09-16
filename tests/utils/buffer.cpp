@@ -44,3 +44,14 @@ TEST_CASE("space") {
 	REQUIRE(get(buf, space<sizeof(uint16_t)>, y));
 	REQUIRE(x == y);
 }
+
+enum TestEnum {
+	TestA = 0x1337,
+	TestB = 0x7331
+};
+
+TEST_CASE("transform") {
+	Buffer buf(sizeof(uint16_t));
+
+	REQUIRE(put(buf, transform<uint16_t>(TestA)));
+}
